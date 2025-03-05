@@ -1,4 +1,4 @@
-## Restaurant Finder
+# Restaurant Finder
 # Overview
 The Restaurant Finder is a C++ application that leverages the Google Places API to fetch and display detailed information about nearby restaurants. The application allows users to input a location (latitude and longitude) and a search radius, and it retrieves a list of restaurants within that area. It provides detailed information such as opening hours, ratings, cuisine types, and more. The data is then categorized and stored in maps for easy access and filtering.
 
