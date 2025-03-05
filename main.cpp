@@ -22,6 +22,13 @@ typedef struct OpeningHours
     std::vector<std::string> weekday_text;                    // Formatted opening hours text
 } OpeningHours;
 
+typedef struct LatLon
+{
+    float lat;
+    float lon;
+    LatLon(float lat, float lon) : lat(lat), lon(lon) {}
+} LatLon;
+
 typedef struct restaurant_data
 {
     std::string url;
@@ -34,8 +41,7 @@ typedef struct restaurant_data
     std::string place_id;
     OpeningHours hours;         // Added hours information
     bool is_operational = true; // Whether the place is permanently closed
-    std::string current_status; // Text describing current open/closed status
-    ezgl::point2d xy_loc;       // for drawing on the map
+    std::string current_status; // Text describing current open/closed statusp
 } restaurant_data;
 
 std::unordered_set<std::string> restaurantTypes = { // set that provides fast lookup for all of google's keys
@@ -396,7 +402,7 @@ std::vector<restaurant_data> fetch_nearby_restaurants(const std::string &locatio
                 // Add a small delay as required by Google API before using a page token
                 // This is necessary as the token might not be immediately usable
                 std::cout << "Getting next page of results with token..." << std::endl;
-                std::this_thread::sleep_for(std::chrono::milliseconds(2000)); // 2-second delay
+                std::this_thread::sleep_for(std::chrono::milliseconds(2000)); // 2-second delay; mandatory for google places api
             }
 
             curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
@@ -469,10 +475,6 @@ std::vector<restaurant_data> fetch_nearby_restaurants(const std::string &locatio
 
                             // Extract latitude and longitude
                             restaurant.location = LatLon(static_cast<float>(place.get_child("geometry").get_child("location").get<double>("lat")), static_cast<float>(place.get_child("geometry").get_child("location").get<double>("lng")));
-
-                            // creates the restaurant xy_loc variable
-                            latLonToCartesian(restaurant.location, restaurant.xy_loc.x, restaurant.xy_loc.y, city.latAvg);
-
                             // Store all types in the restaurant.types vector
                             try
                             {
